@@ -104,11 +104,12 @@
 			입력 : Criteria 				parametertType 	  - com.sample.web.dto.Criteria
 	 -->
 
+	<!--  product_filename 추가 -->
 	<insert id="insertProduct" parameterType="com.sample.vo.Product">
 		insert into shop_products
-		(product_no, product_name, product_description, product_stock, product_price)
+		(product_no, product_name, product_description, product_stock, product_price, product_filename, company_no)
 		values
-		(products_seq.nextval, #{name}, #{description}, #{stock}, #{price})
+		(products_seq.nextval, #{name}, #{description}, #{stock}, #{price}, #{filename}, #{company.no})
 	</insert>
 	<!-- 
 		ProductMapper 인터페이스의
@@ -148,8 +149,8 @@
 			product_no  			as no,
 			product_name			as name,
 			product_description 	as description,
-			product_stock			as stock,
 			product_price			as price,
+			product_stock			as stock,
 			product_status			as status,
 			product_filename		as filename,
 			product_created_date	as createdDate,
@@ -161,7 +162,24 @@
 			product_no = #{value}
 	
 	 </select>
-	
+	 
+	 	
+	<!-- 
+			ProductMapper인터페이스의
+				void deleteProducts(@param("noList) List<Integer> noList)추상메소드와 연결된 SQL구문이다
+			
+			출력 : void      		-		resultType        - 없다
+			입력 : List<Integer>  -   parameterType - 추상메소드 @Param("noList")로 지정했기 때문에 설정할 필요없다.
+	 -->
+		<delete id="deleteProducts">
+			delete from
+				shop_products
+			where
+				product_no in
+				<foreach item="no" collection="noList" open="(" separator="," close=")">
+					#{no}
+				</foreach>
+		</delete>
 	
 	
 
